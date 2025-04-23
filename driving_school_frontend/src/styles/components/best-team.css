@@ -1,0 +1,101 @@
+.best-team-section {
+    padding: 80px 0;
+    background-color: #fff;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.best-team-content {
+    display: flex;
+    align-items: center;
+    gap: 60px;
+}
+
+.best-team-text {
+    flex: 2;
+}
+
+.best-team-action {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.section-title {
+    font-size: 2.5rem;
+    color: #2c3e50;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 80px;
+    height: 4px;
+    background-color: #7e262c;
+}
+
+.section-description {
+    font-size: 1.2rem;
+    line-height: 1.8;
+    color: #555;
+    max-width: 800px;
+}
+
+.team-button {
+    display: inline-block;
+    padding: 18px 40px;
+    background-color: #6e2126;
+    color: white;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    text-align: center;
+    border: 2px solid #6e2126;
+}
+
+.team-button:hover {
+    background-color: transparent;
+    color: #7e262c;
+}
+
+@media (max-width: 992px) {
+    .best-team-content {
+        flex-direction: column;
+        gap: 40px;
+        text-align: center;
+    }
+
+    .section-title::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .section-description {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2rem;
+    }
+
+    .section-description {
+        font-size: 1.1rem;
+    }
+
+    .team-button {
+        padding: 15px 30px;
+        font-size: 1.1rem;
+    }
+}
