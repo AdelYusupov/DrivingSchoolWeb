@@ -76,9 +76,7 @@ const Reviews = () => {
                             <span key={i} className="star">★</span>
                         ))}
                     </div>
-                    <button className="leave-review-btn">Оставить отзыв</button>
                 </div>
-
                 <div className="reviews-list">
                     {reviews.map(review => (
                         <div key={review.id} className="review-card">

@@ -87,6 +87,7 @@ const Header = () => {
                     <a href="#callback" onClick={openCallbackModal}>Перезвоните мне</a>
                     <button className="account-btn"><Link to="/login">Аккаунт студента</Link></button>
                 </nav>
+
             </header>
 
             {/* Модальное окно обратного звонка */}

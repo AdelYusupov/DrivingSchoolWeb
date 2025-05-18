@@ -40,16 +40,49 @@ func (h *AuthHandler) LoginStudent(c *gin.Context) {
 		return
 	}
 
-	token := "generated_token_example"
+	response := gin.H{
+		"id":       student.ID,
+		"login":    student.Login,
+		"fullName": student.FullName,
+		"email":    student.Email,
+		"phone":    student.Phone,
+		"status":   student.Status,
+	}
 
-	student.Password = ""
+	if student.GroupID != 0 {
+		var group models.Group
+		if err := h.DB.Preload("Course").Preload("Instructor").
+			First(&group, student.GroupID).Error; err == nil {
+
+			groupInfo := gin.H{
+				"id":       group.ID,
+				"name":     group.Name,
+				"schedule": group.Schedule,
+				"status":   group.Status,
+			}
+
+			if group.CourseID != 0 {
+				groupInfo["course"] = gin.H{
+					"name":     group.Course.Name,
+					"category": group.Course.Category,
+					"hours":    group.Course.Hours,
+				}
+			}
+
+			if group.InstructorID != 0 {
+				groupInfo["instructor"] = gin.H{
+					"fullName": group.Instructor.FullName,
+					"phone":    group.Instructor.Phone,
+				}
+			}
+
+			response["group"] = groupInfo
+		}
+	}
+
+	token := "generated_token_example"
 	c.JSON(http.StatusOK, gin.H{
-		"token": token,
-		"student": gin.H{
-			"id":       student.ID,
-			"login":    student.Login,
-			"fullName": student.FullName,
-			"email":    student.Email,
-		},
+		"token":   token,
+		"student": response,
 	})
 }

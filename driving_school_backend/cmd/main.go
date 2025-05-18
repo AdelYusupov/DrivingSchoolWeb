@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"log"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -36,7 +37,7 @@ func main() {
 	studentHandler := handlers.NewStudentHandler(db)
 	instructorHandler := handlers.NewInstructorHandler(db)
 	authHandler := handlers.NewAuthHandler(db)
-
+	lessonHandler := handlers.NewLessonHandler(db)
 	api := router.Group("/api")
 	{
 		api.GET("/students", studentHandler.GetAllStudents)
@@ -46,7 +47,10 @@ func main() {
 		protected := api.Group("/")
 		protected.Use(AuthMiddleware())
 		{
-			protected.GET("/students/profile", studentHandler.GetStudentProfile)
+			protected.GET("/lessons/practice", lessonHandler.GetAvailableLessons)
+			protected.POST("/lessons/signup", lessonHandler.SignUpForLesson)
+			protected.GET("/lessons/my-signups", lessonHandler.GetStudentSignups)
+			protected.DELETE("/lessons/signups/:id", lessonHandler.CancelSignup)
 		}
 	}
 
@@ -58,15 +62,27 @@ func main() {
 
 func AuthMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		token := c.GetHeader("Authorization")
-		if token == "" {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Требуется авторизация"})
+		// 1. Получаем токен из заголовка
+		authHeader := c.GetHeader("Authorization")
+		if authHeader == "" {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Authorization header is required"})
 			return
 		}
-		if token != "valid_token_example" {
-			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Неверный токен"})
+
+		tokenParts := strings.Split(authHeader, " ")
+		if len(tokenParts) != 2 || tokenParts[0] != "Bearer" {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid authorization format"})
 			return
 		}
+
+		token := tokenParts[1]
+
+		if token != "generated_token_example" {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+			return
+		}
+
+		c.Set("studentID", uint(13))
 
 		c.Next()
 	}

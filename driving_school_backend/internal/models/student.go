@@ -16,4 +16,5 @@ type Student struct {
 	RegistrationDate time.Time `gorm:"not null;default:CURRENT_TIMESTAMP"`
 	Status           string    `gorm:"size:20;default:'active'"`
 	GroupID          uint
+	Group            Group `gorm:"foreignKey:GroupID"`
 }
